@@ -1,0 +1,12 @@
+{
+  "name": "supabase-keepalive",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Scheduled Supabase keep-alive runner for GitHub Actions",
+  "scripts": {
+    "keepalive": "node keepalive.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

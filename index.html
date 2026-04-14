@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supabase Keep-Alive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Browser-only database activity manager</p>
+        <h1>Keep every free-tier Supabase project awake.</h1>
+        <p class="hero-text">
+          Register multiple projects, schedule lightweight REST pings, and monitor the last few check-ins from one dashboard.
+        </p>
+      </div>
+      <div class="hero-stats">
+        <article>
+          <span id="projectCount">0</span>
+          <p>Projects tracked</p>
+        </article>
+        <article>
+          <span id="runningCount">0</span>
+          <p>Timers running</p>
+        </article>
+        <article>
+          <span id="successCount">0</span>
+          <p>Successful pings</p>
+        </article>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <section class="panel panel-form">
+        <div class="panel-heading">
+          <div>
+            <p class="section-kicker">Add project</p>
+            <h2>Register a Supabase endpoint</h2>
+          </div>
+          <p class="panel-note">Keys stay in memory only and disappear on refresh.</p>
+        </div>
+
+        <form id="projectForm" class="project-form">
+          <label>
+            Project name
+            <input type="text" id="name" name="name" maxlength="40" placeholder="Marketing site" required>
+          </label>
+
+          <label>
+            Project URL
+            <input type="url" id="url" name="url" placeholder="https://your-project.supabase.co" required>
+          </label>
+
+          <label>
+            REST table
+            <input type="text" id="table" name="table" placeholder="healthcheck" required>
+          </label>
+
+          <label>
+            Anon key
+            <input type="password" id="apiKey" name="apiKey" placeholder="eyJhbGciOi..." required>
+          </label>
+
+          <label>
+            Ping interval
+            <select id="interval" name="interval">
+              <option value="3">Every 3 days</option>
+              <option value="5" selected>Every 5 days</option>
+              <option value="6">Every 6 days</option>
+            </select>
+          </label>
+
+          <button type="submit" class="primary-button">Add project</button>
+        </form>
+      </section>
+
+      <section class="panel panel-controls">
+        <div class="panel-heading">
+          <div>
+            <p class="section-kicker">Global controls</p>
+            <h2>Operate the whole fleet</h2>
+          </div>
+        </div>
+
+        <div class="control-grid">
+          <button id="startAllBtn" class="secondary-button">Start all</button>
+          <button id="stopAllBtn" class="secondary-button">Stop all</button>
+          <button id="pingAllBtn" class="secondary-button">Ping all</button>
+        </div>
+
+        <div id="banner" class="banner" role="status" aria-live="polite">
+          Add your first project to begin scheduling keep-alive pings.
+        </div>
+      </section>
+
+      <section class="panel panel-list">
+        <div class="panel-heading">
+          <div>
+            <p class="section-kicker">Projects</p>
+            <h2>Live monitor</h2>
+          </div>
+          <p class="panel-note">Each project keeps its own timer, status, and ping log.</p>
+        </div>
+
+        <div id="emptyState" class="empty-state">
+          <h3>No projects yet</h3>
+          <p>Create one above to start monitoring Supabase activity from this tab.</p>
+        </div>
+
+        <div id="projectList" class="project-list" aria-live="polite"></div>
+      </section>
+    </main>
+  </div>
+
+  <template id="projectCardTemplate">
+    <article class="project-card">
+      <div class="project-topline">
+        <div>
+          <h3 class="project-title"></h3>
+          <p class="project-endpoint"></p>
+        </div>
+        <span class="status-badge idle">Idle</span>
+      </div>
+
+      <div class="project-meta">
+        <p><strong>Table:</strong> <span class="project-table"></span></p>
+        <p><strong>Interval:</strong> <span class="project-interval"></span></p>
+        <p><strong>Next ping:</strong> <span class="project-next-ping">Not scheduled</span></p>
+        <p><strong>Last result:</strong> <span class="project-last-result">No pings yet</span></p>
+      </div>
+
+      <div class="project-actions">
+        <button data-action="start" class="secondary-button">Start</button>
+        <button data-action="stop" class="secondary-button">Stop</button>
+        <button data-action="ping" class="secondary-button">Ping now</button>
+        <button data-action="remove" class="danger-button">Remove</button>
+      </div>
+
+      <div class="log-block">
+        <div class="log-header">
+          <h4>Recent activity</h4>
+          <span class="masked-key"></span>
+        </div>
+        <ul class="log-list"></ul>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
